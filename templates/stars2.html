@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Image</title>
+  <style>
+    /* Reset styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Full-page background video */
+    .video-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    video {
+      background-color: lightcyan;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Centered content styling */
+    .content {
+      position: relative;
+      z-index: 1;
+      color: white;
+      padding: 50px;
+      text-align: center;
+      font-family: 'Times New Roman', Times, serif;
+      margin: 120px auto;
+      width: 70%;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    .content h1 {
+      font-size: 3rem;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);
+    }
+
+    .content input[type="file"] {
+      font-size: 1.2rem;
+      padding: 12px 20px;
+      margin: 20px 0;
+      font-family: 'Times New Roman', Times, serif;
+      background-color: rgba(255, 255, 255, 0.8);
+      border: 2px solid #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .content input[type="file"]:hover {
+      background-color: #ddd;
+      transform: translateY(-3px);
+    }
+
+    .image-preview img {
+      max-width: 100%;
+      max-height: 300px;
+      margin-top: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    .image-info p {
+      font-size: 1.2rem;
+      margin: 15px 0;
+    }
+
+    /* Button styling */
+    .back-button,
+    .submit-button {
+      margin-top: 30px;
+      font-size: 1.5rem;
+      padding: 15px 30px;
+      background-color: rgba(255, 255, 255, 0.8);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .back-button:hover,
+    .submit-button:hover {
+      background-color: #f1f1f1;
+      transform: translateY(-5px);
+    }
+
+    /* Result block styling */
+    .result {
+      margin-top: 20px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Video Background -->
+  <div class="video-background">
+    <video autoplay muted loop>
+      <source src="stars2.mov" type="video/mp4">
+    </video>
+  </div>
+
+  <!-- Content Section -->
+  <div class="content">
+    <h1>Upload Your Image</h1>
+
+    <!-- File Upload Input -->
+    <input type="file" id="image-upload" accept="image/*">
+
+    <!-- Image Preview -->
+    <div class="image-preview" id="image-preview">
+      <p>No image uploaded yet.</p>
+    </div>
+
+    <!-- Image Information -->
+    <div class="image-info" id="image-info">
+      <p><strong>File Name:</strong> <span id="file-name">N/A</span></p>
+      <p><strong>Dimensions:</strong> <span id="image-dimensions">N/A</span></p>
+      <p><strong>Size:</strong> <span id="file-size">N/A</span></p>
+    </div>
+
+    <!-- Submit Button -->
+    <button class="submit-button" onclick="uploadImage()">Submit</button>
+
+    <!-- Result Block for Prediction -->
+    <div class="result" id="result"></div>
+
+    <!-- Back Button -->
+    <button class="back-button" onclick="goBack()">Go Back</button>
+  </div>
+
+  <!-- JavaScript for handling image upload and sending to Flask backend -->
+  <script>
+    const imageUpload = document.getElementById('image-upload');
+    const imagePreview = document.getElementById('image-preview');
+    const fileName = document.getElementById('file-name');
+    const imageDimensions = document.getElementById('image-dimensions');
+    const fileSize = document.getElementById('file-size');
+    const result = document.getElementById('result');
+
+    // Handle image upload and show preview
+    imageUpload.addEventListener('change', function (event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+          const img = document.createElement('img');
+          img.src = e.target.result;
+
+          img.onload = function () {
+            imageDimensions.textContent = `${img.naturalWidth} x ${img.naturalHeight}`;
+          };
+
+          imagePreview.innerHTML = '';
+          imagePreview.appendChild(img);
+          fileName.textContent = file.name;
+          fileSize.textContent = `${(file.size / 1024).toFixed(2)} KB`;
+        };
+
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Send image to Flask for prediction
+    function uploadImage() {
+      const fileInput = document.getElementById('image-upload');
+      const file = fileInput.files[0];
+      if (!file) {
+        result.textContent = 'Please upload an image first.';
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      fetch('/predict', {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.constellation) {
+            result.textContent = 'Predicted Constellation: ' + data.constellation;
+          } else {
+            result.textContent = 'Error: No constellation prediction received.';
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          result.textContent = 'Error: Unable to get prediction.';
+        });
+    }
+
+    // Function to navigate back to the previous page
+    function goBack() {
+      window.location.href = 'stars.html';  // Adjust this link as needed
+    }
+  </script>
+
+</body>
+
+</html>

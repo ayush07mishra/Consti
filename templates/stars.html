@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Constellations</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Full-page background video */
+    .video-background {
+      background-color: lightcyan;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(50%);
+    }
+
+    /* Header Section */
+    .header {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      margin-top: 10vh;
+      color: black;
+    }
+
+    .header h1 {
+      font-size: 3.5rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      animation: fadeIn 2s ease-out;
+      text-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Constellation Information Section */
+    .constellation-info {
+      position: relative;
+      z-index: 1;
+      color: black;
+      text-align: center;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      backdrop-filter: blur(15px);
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+      animation: slideIn 1.5s ease-out;
+    }
+
+    .constellation-info h2 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+
+    .constellation-info p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      padding: 0 20px;
+    }
+
+    /* Button Styling */
+    .button-container {
+      text-align: center;
+      margin-top: 40px;
+      z-index: 2;
+    }
+
+    .button-container button {
+      font-size: 1.3rem;
+      padding: 15px 30px;
+      background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+      color: #000;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.4s;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .button-container button:hover {
+      transform: translateY(-5px);
+      background: linear-gradient(45deg, #ffecd2, #fcb69f);
+    }
+
+    /* Transparent Taskbar Styling */
+    .taskbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 50px;
+      z-index: 3;
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .taskbar a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.2rem;
+      transition: color 0.3s, transform 0.3s;
+    }
+
+    .taskbar a:hover {
+      color: #f1f1f1;
+      transform: translateY(-3px);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideIn {
+      0% {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Video Background -->
+  <div class="video-background">
+    <video autoplay muted loop>
+      <source src="stars.mov" type="video/mp4">
+    </video>
+  </div>
+
+  <!-- Header Section -->
+  <header class="header">
+    <h1>Discover Constellations at Your Fingertips</h1>
+  </header>
+
+  <!-- Constellation Information Section -->
+  <section class="constellation-info">
+    <p>Explore the mysteries of the night sky with famous constellations like Orion, Ursa Major, and more.</p>
+    <p>Each constellation tells a unique story from ancient mythology, astronomy, and science.</p>
+  </section>
+
+  <!-- Button to go to the Image Upload Page -->
+  <div class="button-container">
+    <button onclick="navigateToPage()">Go to Image Upload</button>
+  </div>
+
+  <!-- Transparent Taskbar -->
+  <div class="taskbar">
+
+    <a href="constellations.html">Constellations</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <!-- JavaScript for Navigation -->
+  <script>
+    // Function to navigate to the image upload page
+    function navigateToPage() {
+      window.location.href = "stars2.html"; // Replace 'upload.html' with your actual page
+    }
+  </script>
+</body>
+
+</html>
